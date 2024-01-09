@@ -12,6 +12,7 @@ class TableViewController: UITableViewController {
     private var courses = [CourseModel]()
     private var courseName: String?
     private var courseURL: String?
+    private let jsonUrlString = "https://swiftbook.ru//wp-content/uploads/api/api_courses"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,21 +47,12 @@ class TableViewController: UITableViewController {
     }
     
     func fetchData() {
-        let jsonUrlString = "https://swiftbook.ru//wp-content/uploads/api/api_courses"
-        guard let url = URL(string: jsonUrlString) else { return }
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data else { return }
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                self.courses = try decoder.decode([CourseModel].self, from: data)
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            } catch let error {
-                print(error.localizedDescription)
+        NetworkManager.fetchData(url: jsonUrlString) { courses in
+            self.courses = courses
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
-        }.resume()
+        }
     }
     
     private func configureCell(cell: CustomTableViewCell, for indexPath: IndexPath) {
