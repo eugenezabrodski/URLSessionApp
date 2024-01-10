@@ -16,7 +16,7 @@ class TableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchData()
+        //fetchData()
     }
 
     // MARK: - Table view data source
@@ -48,6 +48,15 @@ class TableViewController: UITableViewController {
     
     func fetchData() {
         NetworkManager.fetchData(url: jsonUrlString) { courses in
+            self.courses = courses
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    func fetchDataWithAlamofire() {
+        AlamofireNetwork.sendRequest(url: jsonUrlString) { courses in
             self.courses = courses
             DispatchQueue.main.async {
                 self.tableView.reloadData()

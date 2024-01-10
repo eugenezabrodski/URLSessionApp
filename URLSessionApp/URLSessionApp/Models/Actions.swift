@@ -15,4 +15,6 @@ enum Actions: String, CaseIterable {
     case ourCourses = "Courses"
     case uploadImage = "Upload Image"
     case downloadFile = "Download File"
+    case ourCoursesWithAlamofire = "Alamofire Courses"
+    case responseData = "Response Data"
 }

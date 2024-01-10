@@ -59,13 +59,18 @@ class CollectionViewController: UICollectionViewController {
         case .downloadFile:
             showAlert()
             dataProvider.startDownload()
+        case .ourCoursesWithAlamofire:
+            performSegue(withIdentifier: "showWithAlamofire", sender: self)
+        case .responseData:
+            performSegue(withIdentifier: "showResponse", sender: self)
+            AlamofireNetwork.responseData(url: "https://swiftbook.ru//wp-content/uploads/api/api_courses")
         }
     }
     
     private func showAlert() {
         
         alert = UIAlertController(title: "Downloading...", message: "0", preferredStyle: .alert)
-        let hieght = NSLayoutConstraint(item: alert.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 170)
+        let hieght = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 170)
         alert.view.addConstraint(hieght)
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive) { action in
             self.dataProvider.stopDownload()
@@ -90,6 +95,24 @@ class CollectionViewController: UICollectionViewController {
             self.alert.view.addSubview(progressView)
         }
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let coursesVC = segue.destination as? TableViewController
+        let imageVC = segue.destination as? ImageViewController
+        
+        
+        switch segue.identifier {
+        case "showCourses":
+            coursesVC?.fetchData()
+        case "showWithAlamofire":
+            coursesVC?.fetchDataWithAlamofire()
+        case "showResponse":
+            imageVC?.fetchDataWithAlamofire()
+        case "showImage":
+            imageVC?.fetchImage()
+        default: break
+        }
     }
 
 }
